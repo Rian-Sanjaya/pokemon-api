@@ -10,3 +10,124 @@ body {
 #__next {
     height: 100%;
 }
+
+.sidebar-type {
+    flex: 0 0 305px;
+    max-width: 305px;
+    min-width: 305px;
+    width: 305px;
+    box-sizing: border-box;
+    transition: .7s;
+}
+
+.hamburger-menu-type {
+    display: none;
+}
+
+.fullscreen-overlay {
+    display: none;
+    transition: .7s;
+}
+
+@media screen and (max-width: 600px) {
+    .sidebar-type.closed {
+        flex: 0 0 0;
+        max-width:0;
+        min-width: 0;
+        transform: translateX(-255px);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        height: 100%;
+        background: rgba(255, 255, 250, 0.9);
+        padding: 30px;
+        overflow-y: auto;
+    }
+
+    .sidebar-type:not(.closed) {
+        flex: 0 0 255px;
+        max-width: 255px;
+        min-width: 255px;
+        width: 255px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        height: 100%;
+        background: rgba(255, 255, 250, 0.9);
+        padding: 30px;
+        overflow-y: auto;
+    }
+
+    .hamburger-menu-type {
+        display: block;
+        position: fixed;
+        top: 8px;
+        z-index: 10;
+        margin-left: 183px;
+        height: 26px;
+        width: 32px;
+        transition: .7s;
+        cursor: pointer;
+    }
+
+    .hamburger-menu-type.closed {
+        transform: translate(-175px);
+    }
+
+    .hamburger-menu-type .line {
+        display: block;
+        height: 4px;
+        width: 100%;
+        border-radius: 10px;
+        background: #0e2432;
+        margin-bottom: 7px;
+    }
+
+    .hamburger-menu-type .line1 {
+        transform-origin: 0% 0%;
+        transition: transform 0.4s ease-in-out;
+    }
+
+    .hamburger-menu-type .line2 {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .hamburger-menu-type .line3 {
+        transform-origin: 0% 100%;
+        transition: transform 0.4s ease-in-out;
+    }
+
+    .hamburger-menu-type:not(.closed) .line1 {
+        display: block;
+        transform: rotate(45deg);
+    }
+
+    .hamburger-menu-type:not(.closed) .line2 {
+        opacity: 0;
+    }
+
+    .hamburger-menu-type:not(.closed) .line3 {
+        display: block;
+        transform: rotate(-45deg);
+    }
+
+    .fullscreen-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9;
+        background: rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        cursor: pointer;
+      }
+      
+      .fullscreen-overlay.closed {
+        display: none;
+        transition: .7s;
+      }
+}

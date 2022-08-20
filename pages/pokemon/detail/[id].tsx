@@ -383,7 +383,16 @@ const DetailPokemon: FC = () => {
                     <Grid container spacing={2}>
                         {   data && data.stats && data.stats.map((stat, idx) => (
                             <Grid item xs={12} md={2} key={idx}
-                                style={{ border: `20px solid ${statsColor[idx]}`, borderRadius: '50%', maxWidth: '170px', maxHeight: '170px', marginRight: '8px', marginBottom: '16px' }}
+                                style={{ 
+                                    border: `20px solid ${statsColor[idx]}`, 
+                                    borderRadius: '50%', 
+                                    minWidth: '170px',
+                                    minHeight: '170px',
+                                    maxWidth: '170px', 
+                                    maxHeight: '170px', 
+                                    marginRight: '8px', 
+                                    marginBottom: '16px' 
+                                }}
                             >
                                 <Typography 
                                     variant="subtitle1"

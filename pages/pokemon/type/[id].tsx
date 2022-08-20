@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, } from "react";
+import React, { FC, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { 
   Box, 
@@ -29,12 +29,12 @@ const SelectInput = withStyles((theme) => ({
   input: {
     borderRadius: 8,
     position: 'relative',
-    border: '1px solid #056593',
+    border: '1px solid #00008b',
     fontSize: '10px',
     fontWeight: 700,
     lineHeight: '20px',
     padding: '4px 8px',
-    color: '#056593',
+    color: '#00008B',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
     '&:focus': {
       borderRadius: 8,
@@ -49,17 +49,17 @@ const SelectInput = withStyles((theme) => ({
 const useStyles = makeStyles((theme) => ({
   root: {
       '& .MuiPaginationItem-rounded': {
-          border: '1px solid #056593',
+          border: '1px solid #00008B',
           borderRadius: '50%',
           fontSize: '10px',
           fontWeight: 700,
           lineHeight: '20px',
-          color: '#056593',
+          color: '#00008B',
           height: '28px',
           minWidth: '28px',
       },
       '& .MuiPaginationItem-page.Mui-selected': {
-          background: '#056593',
+          background: '#00008B',
           color: '#fff',
       }
   },
@@ -78,9 +78,25 @@ const TypePokemon = () => {
   const { id } = router.query;
   const baseUrl = "https://pokeapi.co/api/v2/";
   const classes = useStyles();
+  const sidebar = useRef<HTMLDivElement>(null);
+  const hamburgerBtn = useRef<HTMLDivElement>(null);
+  const fullscreenOvr = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth >= 600) {
+        hamburgerBtn.current.classList.add('closed');
+        sidebar.current.classList.add('closed');
+        fullscreenOvr.current.classList.add('closed');
+        document.body.style.overflowY = '';
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+
     fetchData();
+
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
@@ -131,7 +147,7 @@ const TypePokemon = () => {
       setLoading(false);
   };
 
-  const fetchTypeById = async (url) => {
+  const fetchTypeById = async (e, url) => {
     const arrUrl = url.split('/');
     setLoading(true);
     const res = (await api(baseUrl)).get(`type/${arrUrl[6]}`);
@@ -152,6 +168,7 @@ const TypePokemon = () => {
         results.push(pokemon);
     }
     setData(results);
+    handleToggleSidebar(e);
     setLoading(false);
   };
 
@@ -173,6 +190,18 @@ const TypePokemon = () => {
     return typesColor[5];
   };
 
+  const handleToggleSidebar = (e) => {
+    if (hamburgerBtn.current.classList.contains('closed')) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "";
+    }
+
+    hamburgerBtn.current.classList.toggle('closed');
+    sidebar.current.classList.toggle('closed');
+    fullscreenOvr.current.classList.toggle('closed');
+  };
+
   return (
     <Container maxWidth="xl" style={{ backgroundColor: '#FAFAFA', padding: 0 }}>
       <TopNavbar />
@@ -187,14 +216,9 @@ const TypePokemon = () => {
               backgroundSize: 'cover',
           }}
         >
-          <Box component={"div"}
-            style={{
-              flex: '0 0 305ps',
-              maxWidth: '305px',
-              minWidth: '305px',
-              width: '305px',
-              boxSizing: 'border-box',
-            }}
+          <div
+            ref={sidebar}
+            className="sidebar-type closed"
           >
             <Typography variant="h6" style={{ fontSize: '16px', fontWeight: '700', lineHeight: '24px', color: '#42494D'}}>Pokemon Type</Typography>
             <ul>
@@ -203,14 +227,20 @@ const TypePokemon = () => {
                   <li 
                     key={idx} 
                     style={{ fontSize: '14px', fontWeight: '700', lineHeight: '21px', color: '#7B8082', cursor: 'pointer', marginBottom: '12px' }}
-                    onClick={() => fetchTypeById(list.url)}
+                    onClick={(e) => fetchTypeById(e, list.url)}
                   >
                     {firstWordsToUpperCase(list.name)}
                   </li>
                 ))
               }
             </ul>
-          </Box>
+          </div>
+          <div ref={hamburgerBtn} className="hamburger-menu-type closed" onClick={handleToggleSidebar}>
+            <span className="line line1"></span>
+            <span className="line line2"></span>
+            <span className="line line3"></span>
+          </div>
+          <div ref={fullscreenOvr} className="fullscreen-overlay closed" onClick={handleToggleSidebar}></div>
           <Box component={"div"}
             style={{
               boxSizing: 'border-box',
@@ -312,7 +342,7 @@ const TypePokemon = () => {
             </TableContainer>
             <Box component={'div'} style={{ margin: '40px 0 0', display: 'flex', justifyContent: 'space-between' }}>
               <Box component={'div'} style={{ margin: 'auto 0' }}>
-                <Box component={'span'} style={{ fontSize: '10px', fontWeight: '700', lineHeight: '10px', marginRight: '16px', color: '#056593' }}>
+                <Box component={'span'} style={{ fontSize: '10px', fontWeight: '700', lineHeight: '10px', marginRight: '16px', color: '#00008B' }}>
                   Per Page:
                 </Box>
                 <Box component={'span'}>
@@ -336,7 +366,7 @@ const TypePokemon = () => {
                   onChange={handlePageChange}
                 />
               </Box>
-              <Box component={'div'} style={{ margin: 'auto 0', fontSize: '10px', fontWeight: '700', lineHeight: '10px', marginRight: '16px', color: '#056593' }}>
+              <Box component={'div'} style={{ margin: 'auto 0', fontSize: '10px', fontWeight: '700', lineHeight: '10px', marginRight: '16px', color: '#00008B' }}>
                 Total Data: {totalType}
               </Box>
             </Box>
