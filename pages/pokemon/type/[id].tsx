@@ -191,7 +191,8 @@ const TypePokemon = () => {
   };
 
   const handleToggleSidebar = (e) => {
-    if (hamburgerBtn.current.classList.contains('closed')) {
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    if (vw < 601 && hamburgerBtn.current.classList.contains('closed')) {
       document.body.style.overflowY = "hidden";
     } else {
       document.body.style.overflowY = "";
